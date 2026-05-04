@@ -1,6 +1,6 @@
 from flask import Flask, send_file
 import pandas as pd
-import pyodbc
+import pymssql
 import io
 import os   # ✅ FIX
 
@@ -9,16 +9,12 @@ app = Flask(__name__)
 @app.route('/export')
 def export_excel():
     try:
-        conn = pyodbc.connect(
-            "DRIVER={ODBC Driver 18 for SQL Server};"
-            "SERVER=server-jack.database.windows.net;"
-            "DATABASE=azure-sql-dataflow;"
-            f"UID={os.environ.get('DB_USER')};"
-            f"PWD={os.environ.get('DB_PASS')};"   # ✅ FIXED
-            "Encrypt=yes;"
-            "TrustServerCertificate=no;"
-            "Connection Timeout=30;"
-        )
+        conn = pymssql.connect(
+    server='server-jack.database.windows.net',
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASS"),
+    database='azure-sql-dataflow'
+)
 
         df = pd.read_sql("SELECT * FROM Customers", conn)
         conn.close()
