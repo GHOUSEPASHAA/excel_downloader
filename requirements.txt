@@ -3,4 +3,3 @@ pandas
 pyodbc
 openpyxl
 gunicorn
-os
